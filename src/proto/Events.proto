@@ -1,0 +1,32 @@
+syntax = "proto3";
+option csharp_namespace = "V5RPC.Proto";
+import "DataStructures.proto";
+
+enum EventType {
+	JudgeResult = 0;
+	MatchStart = 1;
+	MatchStop = 2;
+}
+
+message EventArguments {
+    oneof argument {
+        JudgeResultEvent judge_result = 1;
+		Field field = 2;
+    }
+}
+
+message JudgeResultEvent {
+    enum ResultType {
+		PlaceKick = 0;
+		GoalKick = 1;
+		PenaltyKick = 2;
+		FreeKickRightTop = 3;
+		FreeKickRightBot = 4;
+		FreeKickLeftTop = 5;
+		FreeKickLeftBot = 6;
+    }
+
+    ResultType type = 1;
+    Team offensive_team = 2;
+    string reason = 3;
+}

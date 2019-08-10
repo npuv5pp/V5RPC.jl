@@ -1,0 +1,43 @@
+syntax = "proto3";
+option csharp_namespace = "V5RPC.Proto";
+import "DataStructures.proto";
+import "Events.proto";
+
+message RPCCall {
+    oneof method {
+        OnEventCall on_event = 1;
+        GetTeamInfoCall get_team_info = 2;
+        GetInstructionCall get_instruction = 3;
+        GetPlacementCall get_placement = 4;
+    }
+}
+
+message OnEventCall {
+    EventType type = 1;
+	EventArguments arguments = 2;
+}
+
+message GetTeamInfoCall {
+    //TODO
+}
+
+message GetTeamInfoResult {
+    //TODO
+    TeamInfo team_info = 1;
+}
+
+message GetInstructionCall {
+    Field field = 1;
+}
+
+message GetInstructionResult {
+    repeated Wheel wheels = 1;
+}
+
+message GetPlacementCall {
+    Field field = 1;
+}
+
+message GetPlacementResult {
+    Placement placement = 1;
+}
