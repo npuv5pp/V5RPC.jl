@@ -1,4 +1,4 @@
-module Packet
+module ModV5Packet
 
 using UUIDs
 
@@ -16,7 +16,9 @@ end # struct
 function V5Packet(payload::Vector{UInt8}, replyto::UUID)::V5Packet
     len = length(payload)
     len > typemax(UInt16) && throw(ArgumentError("Payload too large: $len"))
-    V5Packet(replyto, 0, len, payload)
+    p = V5Packet(MAGIC, replyto, 0, len, payload)
+    p.REPLY = true
+    return p
 end
 
 getflag(pkt, mask) = (pkt.flags & mask) != 0
@@ -44,13 +46,13 @@ function Base.read(io::IO, ::Type{V5Packet})::V5Packet
     requestid = read(io, UInt128) |> UUID
     flags = read(io, UInt8)
     len = read(io, UInt16)
-    payload = read(io, length)
+    payload = read(io, len)
     V5Packet(magic, requestid, flags, len, payload)
 end
 
 function Base.write(io::IO, x::V5Packet)
     nb = write(io, x.magic)
-    nb += write(io, x.requestid)
+    nb += write(io, x.requestid.value)
     nb += write(io, x.flags)
     nb += write(io, x.length)
     nb += write(io, x.payload)
