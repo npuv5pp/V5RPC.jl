@@ -5,15 +5,15 @@ using UUIDs
 const MAGIC = 0x2b2b3556
 const REPLY_MASK = 0x1
 
-struct V5Packet
+mutable struct V5Packet
     magic::UInt32
     requestid::UUID
     flags::UInt8
     length::UInt16
-    payload::Array{UInt8}
+    payload::Vector{UInt8}
 end # struct
 
-function V5Packet(payload::Array{UInt8}, replyto::UUID)::V5Packet
+function V5Packet(payload::Vector{UInt8}, replyto::UUID)::V5Packet
     len = length(payload)
     len > typemax(UInt16) && throw(ArgumentError("Payload too large: $len"))
     V5Packet(replyto, 0, len, payload)
@@ -22,7 +22,7 @@ end
 getflag(pkt, mask) = (pkt.flags & mask) != 0
 setflag(pkt, mask, x) = x ? pkt.flags |= mask : pkt.flags &= ~mask
 
-function Base.getproperty(pkt::V5Packet, sym)
+function Base.getproperty(pkt::V5Packet, sym::Symbol)
     if sym == :REPLY
         getflag(pkt, REPLY_MASK)
     else
@@ -30,7 +30,7 @@ function Base.getproperty(pkt::V5Packet, sym)
     end
 end
 
-function Base.setproperty!(pkt::V5Packet, sym, x)
+function Base.setproperty!(pkt::V5Packet, sym::Symbol, x)
     if sym == :REPLY
         setflag(pkt, REPLY_MASK, x)
     else
