@@ -1,5 +1,5 @@
 try
-    ver=readchomp(`protoc --version`)
+    ver = readchomp(`protoc --version`)
     @info "ProtoBuf compiler found: $ver"
 catch
     @warn "No ProtoBuf compiler present."

@@ -1,4 +1,5 @@
 module ModV5Packet
+export V5Packet
 
 using UUIDs
 
@@ -11,12 +12,21 @@ mutable struct V5Packet
     flags::UInt8
     length::UInt16
     payload::Vector{UInt8}
+
+    function V5Packet(requestid, flags, payload)
+        len = length(payload)
+        len > typemax(UInt16) && throw(ArgumentError("Payload too large: $len"))
+        new(MAGIC, requestid, flags, len, payload)
+    end
+
 end # struct
 
+function V5Packet(payload::Vector{UInt8})::V5Packet
+    V5Packet(uuid4(), 0, payload)
+end
+
 function V5Packet(payload::Vector{UInt8}, replyto::UUID)::V5Packet
-    len = length(payload)
-    len > typemax(UInt16) && throw(ArgumentError("Payload too large: $len"))
-    p = V5Packet(MAGIC, replyto, 0, len, payload)
+    p = V5Packet(replyto, 0, payload)
     p.REPLY = true
     return p
 end
@@ -40,19 +50,35 @@ function Base.setproperty!(pkt::V5Packet, sym::Symbol, x)
     end
 end
 
+function readguid(io::IO)
+    a = read(io, 16)
+    reverse!(a, 1, 4)
+    reverse!(a, 5, 6)
+    reverse!(a, 7, 8)
+    reinterpret(UInt128, a)[1] |> ntoh |> UUID
+end
+    
+function writeguid(io::IO, x::UUID)
+    a = reinterpret(UInt8, [hton(x.value)])
+    reverse!(a, 1, 4)
+    reverse!(a, 5, 6)
+    reverse!(a, 7, 8)
+    write(io, a)
+end
+
 function Base.read(io::IO, ::Type{V5Packet})::V5Packet
     magic = read(io, UInt32)
     magic == MAGIC || throw(ErrorException("Invalid magic $magic"))
-    requestid = read(io, UInt128) |> UUID
+    requestid = readguid(io)
     flags = read(io, UInt8)
     len = read(io, UInt16)
     payload = read(io, len)
-    V5Packet(magic, requestid, flags, len, payload)
+    V5Packet(requestid, flags, payload)
 end
 
 function Base.write(io::IO, x::V5Packet)
     nb = write(io, x.magic)
-    nb += write(io, x.requestid.value)
+    nb += writeguid(io, x.requestid)
     nb += write(io, x.flags)
     nb += write(io, x.length)
     nb += write(io, x.payload)
