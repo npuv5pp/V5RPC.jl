@@ -74,10 +74,26 @@ end
 
 pack(::Val{:on_event}, data) = nothing
 
-pack(::Val{:get_team_info}, data) = pack(GetTeamInfoResult(team_info = data))
+pack(::Val{:get_team_info}, data::TeamInfo) = pack(GetTeamInfoResult(team_info = data))
+pack(m::Val{:get_team_info}, data::String) = pack(m, TeamInfo(team_name = data))
 
-pack(::Val{:get_instruction}, data) = pack(GetInstructionResult(wheels = data))
+pack(::Val{:get_instruction}, data::Vector{Wheel}) = pack(GetInstructionResult(wheels = data))
+function pack(m::Val{:get_instruction}, data::Vector)
+    @assert length(data) == 5
+    wheels = map(data) do (lspd, rspd)
+        Wheel(left_speed = lspd, right_speed = rspd)
+    end
+    pack(m, wheels)
+end
 
-pack(::Val{:get_placement}, data) = pack(GetPlacementResult(placement = data))
+pack(::Val{:get_placement}, data::Placement) = pack(GetPlacementResult(placement = data))
+function pack(m::Val{:get_placement}, data::Vector)
+    @assert length(data) == 5
+    robots = map(data) do (x, y, r)
+        Robot(position = Vector2(x = x, y = y), rotation = r, wheel = Wheel(left_speed = 0, right_speed = 0))
+    end
+    ball = Ball(position = Vector2(x = 0, y = 0))
+    pack(m, Placement(robots = robots, ball = ball))
+end
 
 end # module

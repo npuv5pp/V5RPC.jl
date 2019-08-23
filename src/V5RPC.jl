@@ -10,24 +10,29 @@ abstract type Strategy end
 
 function on_event(::Strategy, ::Int32, ::EventArguments)
     @warn "on_event not implemented"
+    nothing
 end
 
 function get_team_info(::Strategy)
     @warn "get_team_info not implemented"
-    TeamInfo(team_name = "")
+    ""
 end
 
 function get_instruction(::Strategy, ::Field)
     @warn "get_instruction not implemented"
-    fill(Wheel(left_speed = 0, right_speed = 0), 5)
+    fill((0, 0), 5)
 end
 
 function get_placement(::Strategy, ::Field)
     @warn "get_placement not implemented"
-    robots = fill(Robot(position = Vector2(x = 0, y = 0), rotation = 0, wheel = Wheel(left_speed = 0, right_speed = 0)), 5)
-    ball = Ball(position = Vector2(x = 0, y = 0))
-    Placement(robots = robots, ball = ball)
+    fill((0, 0, 0), 5)
 end
+
+struct EmptyStrategy <: Strategy end
+on_event(::EmptyStrategy, ::Int32, ::EventArguments) = nothing
+get_team_info(::EmptyStrategy) = "Empty Strategy"
+get_instruction(::EmptyStrategy, ::Field) = fill((0, 0), 5)
+get_placement(::EmptyStrategy, ::Field) = fill((0, 0, 0), 5)
 
 include("V5Packet.jl")
 using .ModV5Packet
