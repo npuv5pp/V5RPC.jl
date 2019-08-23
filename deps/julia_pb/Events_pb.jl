@@ -6,7 +6,11 @@ struct __enum_EventType <: ProtoEnum
     JudgeResult::Int32
     MatchStart::Int32
     MatchStop::Int32
-    __enum_EventType() = new(0,1,2)
+    FirstHalfStart::Int32
+    SecondHalfStart::Int32
+    OvertimeStart::Int32
+    PenaltyShootoutStart::Int32
+    __enum_EventType() = new(0,1,2,3,4,5,6)
 end #struct __enum_EventType
 const EventType = __enum_EventType()
 
