@@ -18,11 +18,10 @@ message OnEventCall {
 }
 
 message GetTeamInfoCall {
-    //TODO
+    ServerInfo server_info = 1;
 }
 
 message GetTeamInfoResult {
-    //TODO
     TeamInfo team_info = 1;
 }
 
@@ -32,6 +31,7 @@ message GetInstructionCall {
 
 message GetInstructionResult {
     repeated Wheel wheels = 1;
+    ControlInfo command = 2;
 }
 
 message GetPlacementCall {

@@ -1,6 +1,11 @@
 syntax = "proto3";
 option csharp_namespace = "V5RPC.Proto";
 
+enum Version {
+    V1_0 = 0;
+    V1_1 = 1;
+}
+
 enum Team {
 	Self = 0;
 	Opponent = 1;
@@ -12,9 +17,13 @@ message Vector2 {
     float y = 2;
 }
 
+message ServerInfo {
+    Version version = 1;
+}
+
 message TeamInfo {
     string team_name = 1;
-    //TODO
+    Version version = 2;
 }
 
 message Ball {
@@ -42,4 +51,13 @@ message Field {
 message Placement { 
     repeated Robot robots = 1;
     Ball ball = 2;
+}
+
+enum ControlType {
+    Continue = 0;
+    Reset = 1;
+}
+
+message ControlInfo {
+    ControlType command = 1;
 }
