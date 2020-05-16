@@ -74,16 +74,24 @@ end
 
 pack(::Val{:on_event}, data) = nothing
 
-pack(::Val{:get_team_info}, data::TeamInfo) = pack(GetTeamInfoResult(team_info = data))
-pack(m::Val{:get_team_info}, data::String) = pack(m, TeamInfo(team_name = data))
+pack(::Val{:get_team_info}, data::TeamInfo) =
+    pack(GetTeamInfoResult(team_info = data, version = Version.V1_1))
+pack(m::Val{:get_team_info}, data::String) =
+    pack(m, TeamInfo(team_name = data))
 
-pack(::Val{:get_instruction}, data::Vector{Wheel}) = pack(GetInstructionResult(wheels = data))
+pack(::Val{:get_instruction}, data::Vector{Wheel}, info::ControlInfo) =
+    pack(GetInstructionResult(wheels = data, command = info))
 function pack(m::Val{:get_instruction}, data::Vector)
-    @assert length(data) == 5
-    wheels = map(data) do (lspd, rspd)
+    pack(m, (data, 0))
+end
+function pack(m::Val{:get_instruction}, data::Tuple{Vector, Int32})
+    wdata, idata = data
+    @assert length(wdata) == 5
+    wheels = map(wdata) do (lspd, rspd)
         Wheel(left_speed = lspd, right_speed = rspd)
     end
-    pack(m, wheels)
+    info = ControlInfo(command = idata)
+    pack(m, wheels, info)
 end
 
 pack(::Val{:get_placement}, data::Placement) = pack(GetPlacementResult(placement = data))

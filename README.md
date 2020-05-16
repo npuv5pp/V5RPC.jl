@@ -25,10 +25,10 @@ Then the following overloaded methods can be given. For more information, refer 
 [V5RPC]: https://github.com/npuv5pp/V5RPC
 
 ```julia
-on_event(::MyStrategy, ::Int32, ::EventArguments)
-get_team_info(::MyStrategy)
-get_instruction(::MyStrategy, ::Field)
-get_placement(::MyStrategy, ::Field)
+on_event(::MyStrategy, ::Int32, ::V5RPC.EventArguments)::Nothing
+get_team_info(::MyStrategy, ::V5RPC.ServerInfo)::String
+get_instruction(::MyStrategy, ::V5RPC.Field) # returns [(l, r), ...] or (wheels, V5RPC.ControlType.Reset)
+get_placement(::MyStrategy, ::V5RPC.Field) # returns [(x, y, rotation), ...]
 ```
 
 Then construct a `V5Server` and run it.
