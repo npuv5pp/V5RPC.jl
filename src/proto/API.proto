@@ -18,7 +18,7 @@ message OnEventCall {
 }
 
 message GetTeamInfoCall {
-    ServerInfo server_info = 1;
+    Version server_version = 1;
 }
 
 message GetTeamInfoResult {

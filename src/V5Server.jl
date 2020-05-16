@@ -75,9 +75,9 @@ end
 pack(::Val{:on_event}, data) = nothing
 
 pack(::Val{:get_team_info}, data::TeamInfo) =
-    pack(GetTeamInfoResult(team_info = data, version = Version.V1_1))
+    pack(GetTeamInfoResult(team_info = data))
 pack(m::Val{:get_team_info}, data::String) =
-    pack(m, TeamInfo(team_name = data))
+    pack(m, TeamInfo(team_name = data, version = Version.V1_1))
 
 pack(::Val{:get_instruction}, data::Vector{Wheel}, info::ControlInfo) =
     pack(GetInstructionResult(wheels = data, command = info))

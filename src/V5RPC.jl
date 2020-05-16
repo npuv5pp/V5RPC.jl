@@ -13,7 +13,7 @@ function on_event(::Strategy, ::Int32, ::EventArguments)
     nothing
 end
 
-function get_team_info(::Strategy, ::ServerInfo)
+function get_team_info(::Strategy, ::typeof(Version.V1_1))
     @warn "get_team_info not implemented"
     ""
 end
@@ -30,7 +30,7 @@ end
 
 struct EmptyStrategy <: Strategy end
 on_event(::EmptyStrategy, ::Int32, ::EventArguments) = nothing
-get_team_info(::EmptyStrategy, ::ServerInfo) = "Empty Strategy"
+get_team_info(::EmptyStrategy, ::typeof(Version.V1_1)) = "Empty Strategy"
 get_instruction(::EmptyStrategy, ::Field) = fill((0, 0), 5)
 get_placement(::EmptyStrategy, ::Field) = fill((0, 0, 0), 5)
 

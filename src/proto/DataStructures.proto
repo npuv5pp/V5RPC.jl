@@ -17,10 +17,6 @@ message Vector2 {
     float y = 2;
 }
 
-message ServerInfo {
-    Version version = 1;
-}
-
 message TeamInfo {
     string team_name = 1;
     Version version = 2;

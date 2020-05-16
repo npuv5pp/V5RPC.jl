@@ -30,11 +30,6 @@ mutable struct Vector2 <: ProtoType
     Vector2(; kwargs...) = (o=new(); fillunset(o); isempty(kwargs) || ProtoBuf._protobuild(o, kwargs); o)
 end #mutable struct Vector2
 
-mutable struct ServerInfo <: ProtoType
-    version::Int32
-    ServerInfo(; kwargs...) = (o=new(); fillunset(o); isempty(kwargs) || ProtoBuf._protobuild(o, kwargs); o)
-end #mutable struct ServerInfo
-
 mutable struct TeamInfo <: ProtoType
     team_name::AbstractString
     version::Int32
@@ -78,4 +73,4 @@ mutable struct ControlInfo <: ProtoType
     ControlInfo(; kwargs...) = (o=new(); fillunset(o); isempty(kwargs) || ProtoBuf._protobuild(o, kwargs); o)
 end #mutable struct ControlInfo
 
-export Version, Team, ControlType, Vector2, ServerInfo, TeamInfo, Ball, Wheel, Robot, Field, Placement, ControlInfo
+export Version, Team, ControlType, Vector2, TeamInfo, Ball, Wheel, Robot, Field, Placement, ControlInfo

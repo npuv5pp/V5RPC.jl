@@ -9,7 +9,7 @@ mutable struct OnEventCall <: ProtoType
 end #mutable struct OnEventCall
 
 mutable struct GetTeamInfoCall <: ProtoType
-    server_info::ServerInfo
+    server_version::Int32
     GetTeamInfoCall(; kwargs...) = (o=new(); fillunset(o); isempty(kwargs) || ProtoBuf._protobuild(o, kwargs); o)
 end #mutable struct GetTeamInfoCall
 
