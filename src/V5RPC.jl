@@ -13,9 +13,14 @@ function on_event(::Strategy, ::Int32, ::EventArguments)
     nothing
 end
 
-function get_team_info(::Strategy, ::typeof(Version.V1_1))
+function get_team_info(::Strategy)
     @warn "get_team_info not implemented"
     ""
+end
+
+function get_team_info(s::Strategy, ::typeof(Version.V1_1))
+    @warn "Fallback to v1.0 API"
+    get_team_info(s)
 end
 
 function get_instruction(::Strategy, ::Field)

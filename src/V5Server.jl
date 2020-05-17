@@ -84,7 +84,7 @@ pack(::Val{:get_instruction}, data::Vector{Wheel}, info::ControlInfo) =
 function pack(m::Val{:get_instruction}, data::Vector)
     pack(m, (data, 0))
 end
-function pack(m::Val{:get_instruction}, data::Tuple{Vector, Int32})
+function pack(m::Val{:get_instruction}, data::Tuple{Vector, Integer})
     wdata, idata = data
     @assert length(wdata) == 5
     wheels = map(wdata) do (lspd, rspd)
