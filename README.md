@@ -26,7 +26,7 @@ Then the following overloaded methods can be given. For more information, refer 
 
 ```julia
 on_event(::MyStrategy, ::Int32, ::V5RPC.EventArguments)::Nothing
-get_team_info(::MyStrategy, ::V5RPC.ServerInfo)::String
+get_team_info(::MyStrategy, ::typeof(Version.V1_1))::String
 get_instruction(::MyStrategy, ::V5RPC.Field) # returns [(l, r), ...] or (wheels, V5RPC.ControlType.Reset)
 get_placement(::MyStrategy, ::V5RPC.Field) # returns [(x, y, rotation), ...]
 ```
